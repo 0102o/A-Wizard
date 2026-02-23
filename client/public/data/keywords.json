@@ -1,0 +1,22 @@
+{
+  "spark": {
+    "incantation": "spark",
+    "aliases": ["spark", "spork", "spak", "sparc", "park", "dark"]
+  },
+  "wagalona": {
+    "incantation": "wagalona",
+    "aliases": ["wagalona", "wag a lona", "wagalo na", "wagaloner", "waga lona", "walker loner"]
+  },
+  "zephyra": {
+    "incantation": "zephyra",
+    "aliases": ["zephyra", "zephira", "ze fera", "zephyr", "zefera", "ze fira"]
+  },
+  "vortium": {
+    "incantation": "vortium",
+    "aliases": ["vortium", "vorteum", "vort eum", "fortium", "vortex", "vor tium"]
+  },
+  "shieldra": {
+    "incantation": "shieldra",
+    "aliases": ["shieldra", "shielda", "shield ra", "she eldra", "shield"]
+  }
+}

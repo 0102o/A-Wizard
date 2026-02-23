@@ -1,0 +1,32 @@
+{
+  "spark": {
+    "cooldown": 0.4,
+    "damage": 5,
+    "manaCost": 5,
+    "description": "Quick bolt of light"
+  },
+  "wagalona": {
+    "cooldown": 2.0,
+    "damage": 18,
+    "manaCost": 25,
+    "description": "Powerful fire blast"
+  },
+  "zephyra": {
+    "cooldown": 1.5,
+    "damage": 8,
+    "manaCost": 12,
+    "description": "Twin wind shards"
+  },
+  "vortium": {
+    "cooldown": 3.0,
+    "damage": 25,
+    "manaCost": 40,
+    "description": "Devastating void burst"
+  },
+  "shieldra": {
+    "cooldown": 5.0,
+    "damage": 0,
+    "manaCost": 30,
+    "description": "Blocks next incoming hit"
+  }
+}

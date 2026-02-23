@@ -1,0 +1,239 @@
+people
+
+me   most of the code ( two desktop  and two tv i guess)
+bacon   know like like   just a normal person ( own computer)
+leilan  know a bit of python   own computer
+sam      good at drawing and   play osu  and youtube stream i guess ( maybve own compter)
+araon( knows nothing i usupposed  and    only chormbook)
+ethan( online   rmeote     can draw(but handdrawing) and   know a bit html   and he can firugre things out)
+ivan ( remote drawer)
+
+
+maintain
+ta   cook food i guess
+bonnie(helper?)
+beenie( disctration boy lol)
+
+
+
+
+
+me :
+    client + server 跑起来（Phaser + socket）
+
+联机（两台电脑能看到彼此）
+
+法术系统（配置驱动，2–3 个）
+
+语音 → spellId（最简单版本）
+
+
+
+
+sam 
+A) 地图（Tiled）
+
+arena.tmx（或 arena.json，你更喜欢哪种都行）
+
+tileset.png（16×16 tileset，越少越好）
+
+bg_layer.png（远景剪影，可选但很加分）
+
+B) UI（像素独立游戏味）
+
+ui_panel.png（面板底 + 像素边框，9-slice 最好）
+
+ui_icons.png（法杖/HP/麦克风小图标，随便几个就行）
+
+font.png 或字体选择说明（可选）
+
+
+
+地图规则（必须）
+
+Tile 尺寸：16×16
+
+地图大小：建议 80×45 或 100×56（别太大）
+
+必须有 3 层：
+
+Background（纯装饰，不碰撞）
+
+Ground（主要地形）
+
+Collision（只放可碰撞块）← 这个最重要
+
+竞技场必须有：
+
+两边出生点（留空区域）
+
+2–3 个高低差平台
+
+至少 1 个中间遮挡物（让走位有意义）
+
+主题：选一个（比如 月夜神社 / 晶洞 / 森林遗迹），别混风格
+
+UI 规则（必须）
+
+面板：深色半透明 + 1px 像素描边
+
+不要圆角大按钮
+
+只做：HP 条框、字幕框（显示咒语）、房间号小面板
+
+
+
+Bacon  
+    test stuff       every 30 min 
+    record progress and other stuff 
+    use google doc 
+
+
+
+
+Leilani 
+    spells.csv 
+       spelled
+      cooldown 
+      damage 
+    keywords.csv 
+        spellld 
+        incantation
+        aliases 
+            wrtie a script to translate csv to json
+
+
+IVAN（remote drawer）
+    PNG
+
+透明背景
+
+32×32 或 48×48（二选一）
+
+主角 idle（2 帧）
+
+主角 cast pose（1 帧）
+
+下午：
+
+2–3 个法术 projectile（小图就行）
+
+简单 UI 边框（像素描边）
+
+
+
+🌐 ETHAN（remote，画画 + 一点 HTML）
+
+角色：外包设计 + 文档
+
+👉 他远程做 2 件事
+
+项目介绍页面（HTML）
+
+游戏名字
+
+一句话玩法
+
+咒语列表（酷）
+
+README（给评委/别人看）
+
+怎么开
+
+怎么加入房间
+
+📄 工具：HTML + CSS（不写 JS）
+
+
+🍳 后勤组
+TA
+
+做饭
+
+保证你不断电、不断脑
+
+BONNIE
+
+帮忙装软件
+
+帮忙查 IP
+
+帮忙连 Wi-Fi
+
+BEENIE
+
+负责被忽略 😂
+
+不参与项目决策
+
+
+
+
+
+
+
+DESIGN_HUB/
+├─ 00_MASTER/
+│   ├─ CURRENT_SCOPE.md
+│   └─ DECISIONS.md
+│
+├─ 01_SPELLS/
+│   ├─ spells.csv
+│   ├─ keywords.csv
+│   └─ misrecognitions.csv
+│
+├─ 02_ART/
+│   ├─ character/
+│   ├─ spells/
+│   ├─ tileset/
+│   └─ ui/
+│
+├─ 03_UI_UX/
+│   └─ ui_mockups.png
+│
+├─ 04_TESTING/
+│   ├─ bugs.md
+│   └─ demo_script.md
+│
+└─ 99_ARCHIVE/
+
+
+
+artist  Ivan
+主角 idle（2 帧）
+
+主角 cast pose（1 帧）
+
+要求：
+
+PNG
+
+透明背景
+
+32×32 或 48×48（选一个）
+
+
+
+
+
+
+
+
+LEILAN
+上午任务（不碰代码）：
+
+写 spells.csv（只 3 个 spell）
+
+spellId
+
+cooldown
+
+damage
+
+写 keywords.csv
+
+spellId
+
+咒语词
+
+aliases（先随便）

@@ -1,0 +1,353 @@
+🎯 Project Goal (ONLY GOAL)
+Two computers, browser-based online duel
+
+
+Player can move + cast 5–8 spells
+
+
+Pixel / anime-style, NOT web-game looking
+
+
+Voice → spell casting (simple version)
+
+👥 Team & Responsibilities
+
+👑 Tyell(Tech Lead / Main Programmer)
+Role: Core system + integration (only person touching game code)
+Responsibilities
+Client + Server running
+
+
+Phaser (client)
+
+
+Node + Socket.io (server)
+
+
+Online multiplayer
+
+
+Two computers can see each other
+
+
+Spell system (config-driven, 2–3 spells only)
+
+
+Voice → spellId mapping (simple, reliable)
+
+
+Final integration & demo stability
+
+
+NOT doing
+
+
+
+🎨 SAM (Local Artist – Map + UI)
+Role: Visual quality anchor (pixel game feel)
+
+1) Arena Map (Tiled)
+
+Deliver:
+
+arena.json (推荐 JSON，最省事)
+
+tileset.png (16×16)
+
+Tiled Setup Rules:
+
+Tile size: 16×16
+
+Map size: 80×45 (优先) 或 100×56
+
+Layers (exact names):
+
+Background (decor only)
+
+Ground (visible)
+
+Collision (solid only)
+
+Arena layout must include:
+
+Left spawn zone + Right spawn zone (留空区域)
+
+2–3 platforms (高低差)
+
+1 central obstacle (遮挡物)
+
+Theme: pick ONE (Moon Shrine / Crystal Cave / Forest Ruins)
+
+✅ Deadline: 11:30 AM 给我第一版（哪怕很丑也行）
+
+2) UI Panels (Pixel indie, not web)
+
+Deliver:
+
+ui_panel.png (panel texture for UI boxes)
+
+What it must cover (3 panels only):
+
+HP bar frame
+
+Spell subtitle box (“You said: …”)
+
+Room code / player list panel
+
+Style rules:
+
+Dark semi-transparent look
+
+1px pixel outline
+
+NO rounded modern UI
+
+✅ Recommended size: ui_panel.png 做成 可平铺纹理 或一个 大面板图（你怎么方便怎么来）
+✅ Deadline: 3:00 PM
+
+P1 (强烈建议，有就直接质感提升)
+3) UI Icons
+
+Deliver:
+
+ui_icons.png
+
+Icons (16×16 each is enough):
+
+HP (heart / bar icon)
+
+Wand icon
+
+Mic icon
+
+(Optional) Ready check icon
+
+✅ Deadline: 4:00 PM
+
+P2 (可选，加分但不阻塞开发)
+4) Background Silhouette
+
+Deliver:
+
+bg_layer.png (远景剪影)
+
+✅ Deadline: anytime before 5 PM
+
+
+🧪 BACON (Tester / Recorder)
+Role: Continuous testing & progress tracking
+Responsibilities
+Test game every 30 minutes
+
+
+Check:
+
+
+Can join room
+
+
+Disconnects?
+
+
+Spell sync works?
+
+
+Record:
+
+
+What works
+
+
+What breaks
+
+
+After-fix result
+
+
+Tool
+Google Doc
+
+
+Simple log, human language
+
+
+
+🐍 LEILAN (Data / Python Helper)
+Role: Spell data & tooling (NO game code)
+Morning Tasks
+Create spells.csv
+
+
+spellId
+
+
+cooldown
+
+
+damage
+
+
+Create keywords.csv
+
+
+spellId
+
+
+incantation
+
+
+aliases (misrecognitions)
+
+
+Optional
+Python script: CSV → JSON
+
+
+If script fails → manual export is OK
+
+
+Rules
+❌ No Phaser
+
+
+❌ No Socket
+
+
+✅ Data only
+
+
+
+🎨 IVAN (Remote Artist – Character & FX)
+Role: Character visuals + spell feel
+Deliverables
+Character idle animation (2 frames)
+
+
+Character cast pose (1 frame)
+
+
+2–3 spell projectile sprites
+
+
+Simple UI border (if time)
+
+
+Requirements
+PNG
+
+
+Transparent background
+
+
+32×32 OR 48×48 (choose one, no mixing)
+
+
+
+🌐 ETHAN (Remote – HTML + Docs)
+Role: Presentation & documentation
+Deliverables
+Project Intro Page (HTML + CSS)
+
+
+Game name
+
+
+One-line description
+
+
+Spell list (cool looking)
+
+
+README
+
+
+How to start host
+
+
+How to join room
+
+
+Rules
+No JavaScript
+
+
+Visual clarity > features
+
+
+
+💻 AARON (Chromebook Only)
+Role: Pure playtester
+Responsibilities
+Play on Chromebook
+
+
+Report:
+
+
+Confusing parts
+
+
+Cool moments
+
+
+Performance issues
+
+
+Tool
+Google Doc (bugs.md style notes)
+
+
+
+🍳 MAINTENANCE / SUPPORT
+TA
+Cook food
+
+
+Keep energy up
+
+
+BONNIE
+Install software
+
+
+Find host IP
+
+
+Wi-Fi setup
+
+
+BEENIE
+Professional distraction 😂
+
+
+No project decisions
+
+
+
+📁 Shared Folder Structure (Design Hub)
+DESIGN_HUB/
+├─ 00_MASTER/
+│   ├─ CURRENT_SCOPE.md
+│   └─ DECISIONS.md
+│
+├─ 01_SPELLS/
+│   ├─ spells.csv
+│   ├─ keywords.csv
+│   └─ misrecognitions.csv
+│
+├─ 02_ART/
+│   ├─ character/
+│   ├─ spells/
+│   ├─ tileset/
+│   └─ ui/
+│
+├─ 03_UI_UX/
+│   └─ ui_mockups.png
+│
+├─ 04_TESTING/
+│   ├─ bugs.md
+│   └─ demo_script.md
+│
+└─ 99_ARCHIVE/
+
+

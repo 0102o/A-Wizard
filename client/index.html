@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice‑Cast Wizard Duel</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:#0b0f14; color:#e8eef7; overflow:hidden;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    #game { width:100vw; height:100vh; }
+
+    /* Overlays */
+    .overlay {
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,0.6); z-index:10;
+    }
+    .panel {
+      width:min(520px,92vw); border:2px solid rgba(255,255,255,0.2);
+      box-shadow:0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+      background:rgba(10,14,20,0.95); padding:20px; border-radius:4px;
+    }
+    .panel-title { font-size:18px; font-weight:700; letter-spacing:0.5px; }
+    .row { display:flex; gap:8px; margin-top:10px; }
+    input {
+      flex:1; background:#0b0f14; color:#e8eef7; border:1px solid rgba(255,255,255,0.2);
+      padding:10px; outline:none; border-radius:2px;
+    }
+    input:focus { border-color:rgba(110,231,255,0.5); }
+    button {
+      background:#162031; color:#e8eef7; border:1px solid rgba(255,255,255,0.2);
+      padding:10px 14px; cursor:pointer; border-radius:2px; font-family:inherit; font-size:13px;
+    }
+    button:hover { background:#1d2d45; border-color:rgba(110,231,255,0.4); }
+    button:active { transform:scale(0.98); }
+    .muted { opacity:0.7; font-size:12px; margin-top:8px; line-height:1.5; }
+    .err { color:#ff8b8b; font-size:12px; margin-top:8px; min-height:16px; }
+
+    /* HUD */
+    #hudOverlay { display:none; position:fixed; inset:0; pointer-events:none; z-index:5; }
+
+    /* HP bars */
+    .hp-container { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; }
+    .hp-block { flex:1; max-width:220px; }
+    .hp-block.right { text-align:right; }
+    .hp-label { font-size:11px; font-weight:700; margin-bottom:3px; }
+    .hp-label.left { color:#6ee7ff; }
+    .hp-label.right { color:#ffb86e; }
+    .hp-track {
+      width:100%; height:16px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.15);
+      border-radius:2px; overflow:hidden;
+    }
+    .hp-fill { height:100%; transition:width 0.3s ease, background 0.3s ease; border-radius:1px; }
+    .hp-fill.left { background:#4ade80; }
+    .hp-fill.right { background:#fb923c; }
+
+    /* Mana bar */
+    .mana-track {
+      width:100%; max-width:220px; height:8px; background:rgba(0,0,0,0.5);
+      border:1px solid rgba(100,100,200,0.2); border-radius:1px; overflow:hidden; margin-top:4px;
+    }
+    .mana-fill { height:100%; background:#818cf8; transition:width 0.15s ease; }
+    .mana-label { font-size:10px; color:#a5b4fc; margin-top:2px; }
+
+    /* Ready status */
+    .ready-row { display:flex; justify-content:space-between; font-size:10px; opacity:0.8; margin-top:4px; }
+
+    /* Cooldown bar */
+    #hudCooldowns { font-size:11px; margin-top:6px; letter-spacing:0.3px; }
+
+    /* Bottom bar */
+    .hud-bottom {
+      position:absolute; left:12px; bottom:12px; font-size:12px; width:min(620px,92vw);
+      background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:3px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    #hudSubtitle { white-space:pre-wrap; margin:4px 0 0 0; font-size:11px; opacity:0.9; }
+    .key-hints { opacity:0.5; font-size:10px; margin-top:4px; }
+
+    /* End overlay */
+    #endOverlay .panel { text-align:center; }
+    #endWinner { font-size:20px; font-weight:700; margin:12px 0; }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+
+  <!-- ═══ Lobby ═══ -->
+  <div id="lobbyOverlay" class="overlay">
+    <div class="panel">
+      <div class="panel-title">⚡ Voice‑Cast Wizard Duel</div>
+      <div class="muted">LAN 1v1. Host runs client+server. Player 2 opens the host IP in browser.</div>
+      <div class="row"><input id="nameInput" placeholder="Your name" /></div>
+      <div class="row">
+        <button id="createBtn">Create Room</button>
+        <input id="roomInput" placeholder="Room code" style="max-width:200px;" />
+        <button id="joinBtn">Join</button>
+      </div>
+      <div class="row"><input id="serverInput" placeholder="Server URL (default: auto)" /></div>
+      <div class="muted">Voice works best on <b>Chrome</b>. Fallback: keys <b>1–5</b> to cast spells.</div>
+      <div id="errBox" class="err"></div>
+    </div>
+  </div>
+
+  <!-- ═══ HUD ═══ -->
+  <div id="hudOverlay">
+    <!-- Top bar: room + HP -->
+    <div style="position:absolute; left:12px; right:12px; top:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="font-size:12px; opacity:0.6;">
+          <span id="hudRoom"></span> · <span id="hudPhase"></span> · <span id="hudTimer"></span>
+        </div>
+      </div>
+      <div class="hp-container">
+        <div class="hp-block">
+          <div id="hudHPLeft" class="hp-label left"></div>
+          <div class="hp-track"><div id="hudHPBarLeft" class="hp-fill left" style="width:100%"></div></div>
+          <div class="mana-track"><div id="hudManaBar" class="mana-fill" style="width:100%"></div></div>
+          <div id="hudManaText" class="mana-label">MP 100</div>
+        </div>
+        <div class="hp-block right">
+          <div id="hudHPRight" class="hp-label right"></div>
+          <div class="hp-track"><div id="hudHPBarRight" class="hp-fill right" style="width:100%"></div></div>
+        </div>
+      </div>
+      <div class="ready-row">
+        <div id="hudReadyLeft"></div>
+        <div id="hudReadyRight"></div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="hud-bottom">
+      <div id="hudMic">🎙 OFF</div>
+      <div id="hudCooldowns"></div>
+      <pre id="hudSubtitle"></pre>
+      <div class="key-hints">1–5=Cast | R=Ready | M=Mic | Arrows=Move | N=Rematch | B=Back</div>
+    </div>
+  </div>
+
+  <!-- ═══ Match End ═══ -->
+  <div id="endOverlay" class="overlay" style="display:none;">
+    <div class="panel">
+      <div class="panel-title">Match Over</div>
+      <div id="endWinner"></div>
+      <div class="row" style="justify-content:center;">
+        <button id="rematchBtn">Rematch (N)</button>
+        <button id="backBtn">Back to Lobby (B)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Loadout ═══ -->
+  <div id="loadoutOverlay" class="overlay" style="display:none;">
+    <div class="panel" style="max-width:720px;">
+      <div class="panel-title">Choose your spells</div>
+      <div class="muted">Tip: Click ▶ to hear pronunciation. Cast with voice or number keys.</div>
+      <div id="loadoutRoom" class="muted" style="margin-top:10px;"></div>
+      <div id="spellList" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;"></div>
+      <div class="row" style="align-items:center;">
+        <div class="muted" id="loadoutHint">Pick exactly 3 spells.</div>
+        <div style="flex:1"></div>
+        <button id="loadoutContinueBtn">Continue</button>
+      </div>
+      <div class="muted">After continuing: press <b>R</b> to Ready. Both players READY → match starts.</div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
