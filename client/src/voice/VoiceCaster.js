@@ -1,11 +1,18 @@
 export class VoiceCaster {
   /**
-   * @param {(evt: {raw: string, normalized: string}) => void} onPhrase
-   * @param {(err: string) => void} onError
+   * Supports either:
+   *   new VoiceCaster(onPhraseFn, onErrorFn)
+   * or:
+   *   new VoiceCaster({ onPhrase, onError })
    */
   constructor(onPhrase, onError) {
-    this.onPhrase = onPhrase;
-    this.onError = onError;
+    if (onPhrase && typeof onPhrase === "object") {
+      this.onPhrase = onPhrase.onPhrase;
+      this.onError = onPhrase.onError;
+    } else {
+      this.onPhrase = onPhrase;
+      this.onError = onError;
+    }
 
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.supported = !!SR;
@@ -24,11 +31,11 @@ export class VoiceCaster {
         const raw = (res?.[0]?.transcript ?? "").trim();
         if (!raw) return;
         const normalized = normalizePhrase(raw);
-        this.onPhrase?.({ raw, normalized });
+        if (typeof this.onPhrase === "function") this.onPhrase({ raw, normalized });
       };
 
       this.rec.onerror = (e) => {
-        this.onError?.(String(e.error || "voice error"));
+        if (typeof this.onError === "function") this.onError(String(e.error || "voice error"));
       };
 
       this.rec.onend = () => {

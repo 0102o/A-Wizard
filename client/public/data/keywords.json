@@ -1,22 +1,143 @@
 {
   "spark": {
     "incantation": "spark",
-    "aliases": ["spark", "spork", "spak", "sparc", "park", "dark"]
+    "aliases": [
+      "spark"
+    ]
   },
   "wagalona": {
     "incantation": "wagalona",
-    "aliases": ["wagalona", "wag a lona", "wagalo na", "wagaloner", "waga lona", "walker loner"]
+    "aliases": [
+      "wagalona"
+    ]
   },
   "zephyra": {
     "incantation": "zephyra",
-    "aliases": ["zephyra", "zephira", "ze fera", "zephyr", "zefera", "ze fira"]
+    "aliases": [
+      "zephyra"
+    ]
   },
   "vortium": {
     "incantation": "vortium",
-    "aliases": ["vortium", "vorteum", "vort eum", "fortium", "vortex", "vor tium"]
+    "aliases": [
+      "vortium"
+    ]
   },
   "shieldra": {
     "incantation": "shieldra",
-    "aliases": ["shieldra", "shielda", "shield ra", "she eldra", "shield"]
+    "aliases": [
+      "shieldra"
+    ]
+  },
+  "water_tsunami": {
+    "incantation": "water_tsunami",
+    "aliases": [
+      "water_tsunami",
+      "water tsunami",
+      "watertsunami",
+      "water-tsunami"
+    ]
+  },
+  "water_dart": {
+    "incantation": "water_dart",
+    "aliases": [
+      "water_dart",
+      "water dart",
+      "waterdart",
+      "water-dart"
+    ]
+  },
+  "ice_wall": {
+    "incantation": "ice_wall",
+    "aliases": [
+      "ice_wall",
+      "ice wall",
+      "icewall",
+      "ice-wall"
+    ]
+  },
+  "water_ring": {
+    "incantation": "water_ring",
+    "aliases": [
+      "water_ring",
+      "water ring",
+      "waterring",
+      "water-ring"
+    ]
+  },
+  "sun_ball": {
+    "incantation": "sun_ball",
+    "aliases": [
+      "sun_ball",
+      "sun ball",
+      "sunball",
+      "sun-ball"
+    ]
+  },
+  "flare": {
+    "incantation": "flare",
+    "aliases": [
+      "flare"
+    ]
+  },
+  "magma_tusk": {
+    "incantation": "magma_tusk",
+    "aliases": [
+      "magma_tusk",
+      "magma tusk",
+      "magmatusk",
+      "magma-tusk"
+    ]
+  },
+  "rock_stampede": {
+    "incantation": "rock_stampede",
+    "aliases": [
+      "rock_stampede",
+      "rock stampede",
+      "rockstampede",
+      "rock-stampede"
+    ]
+  },
+  "pebble": {
+    "incantation": "pebble",
+    "aliases": [
+      "pebble"
+    ]
+  },
+  "stone_mountain": {
+    "incantation": "stone_mountain",
+    "aliases": [
+      "stone_mountain",
+      "stone mountain",
+      "stonemountain",
+      "stone-mountain"
+    ]
+  },
+  "cross_winds": {
+    "incantation": "cross_winds",
+    "aliases": [
+      "cross_winds",
+      "cross winds",
+      "crosswinds",
+      "cross-winds"
+    ]
+  },
+  "wind_grab": {
+    "incantation": "wind_grab",
+    "aliases": [
+      "wind_grab",
+      "wind grab",
+      "windgrab",
+      "wind-grab"
+    ]
+  },
+  "gas_condensation": {
+    "incantation": "gas_condensation",
+    "aliases": [
+      "gas_condensation",
+      "gas condensation",
+      "gascondensation",
+      "gas-condensation"
+    ]
   }
 }

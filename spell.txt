@@ -1,0 +1,19 @@
+{
+  "water_tsunami": { "cooldown": 1.2, "manaCost": 12, "kind": "projectile", "damage": 10 },
+  "water_dart":    { "cooldown": 0.6, "manaCost": 6,  "kind": "projectile", "damage": 5 },
+  "ice_wall":      { "cooldown": 4.0, "manaCost": 20, "kind": "block",      "blockMs": 2500 },
+
+  "water_ring":    { "cooldown": 6.0, "manaCost": 25, "kind": "heal",       "heal": 30 },
+
+  "sun_ball":      { "cooldown": 3.5, "manaCost": 30, "kind": "projectile", "damage": 25, "delayMs": 1500 },
+  "flare":         { "cooldown": 0.7, "manaCost": 7,  "kind": "projectile", "damage": 5 },
+  "magma_tusk":    { "cooldown": 4.0, "manaCost": 22, "kind": "block",      "blockMs": 2500 },
+
+  "rock_stampede": { "cooldown": 5.0, "manaCost": 28, "kind": "status",     "hits": 5, "damage": 4, "tickIntervalMs": 180 },
+  "pebble":        { "cooldown": 0.9, "manaCost": 8,  "kind": "projectile", "damage": 6 },
+  "stone_mountain":{ "cooldown": 4.5, "manaCost": 24, "kind": "block",      "blockMs": 2500 },
+
+  "cross_winds":   { "cooldown": 2.0, "manaCost": 18, "kind": "projectile", "hits": 2, "damage": 11, "tickIntervalMs": 120 },
+  "wind_grab":     { "cooldown": 6.0, "manaCost": 26, "kind": "status",     "ticks": 3, "damage": 3, "tickIntervalMs": 1000, "stunMs": 3000 },
+
+  "gas_condensation": { "cooldown": 4.0, "manaCost": 20, "kind": "status", "ticks": 4, "damage": 2, "tickIntervalMs

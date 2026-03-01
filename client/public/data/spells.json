@@ -1,32 +1,244 @@
 {
   "spark": {
     "cooldown": 0.4,
-    "damage": 5,
     "manaCost": 5,
-    "description": "Quick bolt of light"
+    "kind": "projectile",
+    "damage": 5,
+    "behavior": {
+      "speed": 580,
+      "lifetimeMs": 650,
+      "radius": 6,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 520,
+      "coneDeg": 22
+    },
+    "element": "wind"
   },
   "wagalona": {
     "cooldown": 2.0,
-    "damage": 18,
     "manaCost": 25,
-    "description": "Powerful fire blast"
+    "kind": "projectile",
+    "damage": 18,
+    "behavior": {
+      "speed": 400,
+      "lifetimeMs": 1100,
+      "radius": 12,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 560,
+      "coneDeg": 18
+    },
+    "element": "fire"
   },
   "zephyra": {
     "cooldown": 1.5,
-    "damage": 8,
     "manaCost": 12,
-    "description": "Twin wind shards"
+    "kind": "projectile",
+    "damage": 8,
+    "hits": 2,
+    "tickIntervalMs": 120,
+    "behavior": {
+      "speed": 520,
+      "lifetimeMs": 850,
+      "radius": 7,
+      "count": 2,
+      "spreadDeg": 12,
+      "range": 540,
+      "coneDeg": 28
+    },
+    "element": "wind"
   },
   "vortium": {
     "cooldown": 3.0,
-    "damage": 25,
     "manaCost": 40,
-    "description": "Devastating void burst"
+    "kind": "projectile",
+    "damage": 25,
+    "behavior": {
+      "speed": 340,
+      "lifetimeMs": 1400,
+      "radius": 16,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 600,
+      "coneDeg": 15
+    },
+    "element": "void"
   },
   "shieldra": {
     "cooldown": 5.0,
-    "damage": 0,
     "manaCost": 30,
-    "description": "Blocks next incoming hit"
+    "kind": "shield",
+    "blocks": 1,
+    "durationMs": 3000,
+    "element": "arcane"
+  },
+  "water_tsunami": {
+    "cooldown": 1.2,
+    "manaCost": 12,
+    "kind": "projectile",
+    "damage": 10,
+    "behavior": {
+      "speed": 420,
+      "lifetimeMs": 900,
+      "radius": 10,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 560,
+      "coneDeg": 20
+    },
+    "element": "water"
+  },
+  "water_dart": {
+    "cooldown": 0.6,
+    "manaCost": 6,
+    "kind": "projectile",
+    "damage": 5,
+    "behavior": {
+      "speed": 600,
+      "lifetimeMs": 700,
+      "radius": 6,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 520,
+      "coneDeg": 22
+    },
+    "element": "water"
+  },
+  "ice_wall": {
+    "cooldown": 4.0,
+    "manaCost": 20,
+    "kind": "block",
+    "blockMs": 2500,
+    "blocks": 1,
+    "radius": 90,
+    "element": "ice"
+  },
+  "water_ring": {
+    "cooldown": 6.0,
+    "manaCost": 25,
+    "kind": "heal",
+    "heal": 30,
+    "radius": 110,
+    "element": "water"
+  },
+  "sun_ball": {
+    "cooldown": 3.5,
+    "manaCost": 30,
+    "kind": "projectile",
+    "damage": 25,
+    "delayMs": 1500,
+    "behavior": {
+      "speed": 340,
+      "lifetimeMs": 1400,
+      "radius": 16,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 620,
+      "coneDeg": 14
+    },
+    "element": "fire"
+  },
+  "flare": {
+    "cooldown": 0.7,
+    "manaCost": 7,
+    "kind": "projectile",
+    "damage": 5,
+    "behavior": {
+      "speed": 620,
+      "lifetimeMs": 650,
+      "radius": 6,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 520,
+      "coneDeg": 22
+    },
+    "element": "fire"
+  },
+  "magma_tusk": {
+    "cooldown": 4.0,
+    "manaCost": 22,
+    "kind": "block",
+    "blockMs": 2500,
+    "blocks": 1,
+    "radius": 90,
+    "element": "fire"
+  },
+  "rock_stampede": {
+    "cooldown": 5.0,
+    "manaCost": 28,
+    "kind": "status",
+    "hits": 5,
+    "damage": 4,
+    "tickIntervalMs": 180,
+    "radius": 120,
+    "durationMs": 900,
+    "element": "rock"
+  },
+  "pebble": {
+    "cooldown": 0.9,
+    "manaCost": 8,
+    "kind": "projectile",
+    "damage": 6,
+    "behavior": {
+      "speed": 560,
+      "lifetimeMs": 800,
+      "radius": 7,
+      "count": 1,
+      "spreadDeg": 0,
+      "range": 540,
+      "coneDeg": 20
+    },
+    "element": "rock"
+  },
+  "stone_mountain": {
+    "cooldown": 4.5,
+    "manaCost": 24,
+    "kind": "block",
+    "blockMs": 2500,
+    "blocks": 1,
+    "radius": 110,
+    "element": "rock"
+  },
+  "cross_winds": {
+    "cooldown": 2.0,
+    "manaCost": 18,
+    "kind": "projectile",
+    "hits": 2,
+    "damage": 11,
+    "tickIntervalMs": 120,
+    "behavior": {
+      "speed": 540,
+      "lifetimeMs": 900,
+      "radius": 8,
+      "count": 2,
+      "spreadDeg": 14,
+      "range": 560,
+      "coneDeg": 26
+    },
+    "element": "wind"
+  },
+  "wind_grab": {
+    "cooldown": 6.0,
+    "manaCost": 26,
+    "kind": "status",
+    "ticks": 3,
+    "damage": 3,
+    "tickIntervalMs": 1000,
+    "stunMs": 3000,
+    "radius": 100,
+    "durationMs": 3000,
+    "element": "wind"
+  },
+  "gas_condensation": {
+    "cooldown": 4.5,
+    "manaCost": 22,
+    "kind": "status",
+    "ticks": 5,
+    "damage": 3,
+    "tickIntervalMs": 700,
+    "radius": 110,
+    "durationMs": 3800,
+    "element": "poison"
   }
 }

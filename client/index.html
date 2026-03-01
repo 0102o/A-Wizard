@@ -3,33 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voice‑Cast Wizard Duel</title>
+  <title>Voice-Cast Wizard Duel</title>
   <style>
     * { box-sizing: border-box; }
     html, body { margin:0; padding:0; background:#0b0f14; color:#e8eef7; overflow:hidden;
+      /* Fill letterbox areas with a blurred arena backdrop for a more "anime" look */
+      background-image: url('/assets/arena-full.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    #game { width:100vw; height:100vh; }
+    #game { width:100vw; height:100vh; position:fixed; inset:0; }
+    #game canvas { display:block; margin:0 auto; image-rendering: pixelated; }
 
     /* Overlays */
     .overlay {
       position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,0.6); z-index:10;
+      background:rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px);
+      z-index:10;
     }
     .panel {
       width:min(520px,92vw); border:2px solid rgba(255,255,255,0.2);
       box-shadow:0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
-      background:rgba(10,14,20,0.95); padding:20px; border-radius:4px;
+      background:rgba(10,14,20,0.95); padding:20px; border-radius:6px;
+    }
+    /* Use your drive UI frame for "anime game" panels */
+    .panel-ui {
+      width:min(680px,94vw);
+      border:none;
+      background:url('/assets/basic_ui.png') no-repeat;
+      background-size:100% 100%;
+      padding:34px 36px 28px 36px;
+      box-shadow:0 18px 80px rgba(0,0,0,0.7);
+      border-radius:10px;
     }
     .panel-title { font-size:18px; font-weight:700; letter-spacing:0.5px; }
     .row { display:flex; gap:8px; margin-top:10px; }
     input {
       flex:1; background:#0b0f14; color:#e8eef7; border:1px solid rgba(255,255,255,0.2);
-      padding:10px; outline:none; border-radius:2px;
+      padding:10px 12px; outline:none; border-radius:6px;
     }
     input:focus { border-color:rgba(110,231,255,0.5); }
     button {
       background:#162031; color:#e8eef7; border:1px solid rgba(255,255,255,0.2);
-      padding:10px 14px; cursor:pointer; border-radius:2px; font-family:inherit; font-size:13px;
+      padding:10px 14px; cursor:pointer; border-radius:8px; font-family:inherit; font-size:13px;
     }
     button:hover { background:#1d2d45; border-color:rgba(110,231,255,0.4); }
     button:active { transform:scale(0.98); }
@@ -39,26 +57,76 @@
     /* HUD */
     #hudOverlay { display:none; position:fixed; inset:0; pointer-events:none; z-index:5; }
 
-    /* HP bars */
+    /* HP bars (pixel UI) */
     .hp-container { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; }
-    .hp-block { flex:1; max-width:220px; }
+    .hp-block { flex:1; max-width:292px; }
     .hp-block.right { text-align:right; }
-    .hp-label { font-size:11px; font-weight:700; margin-bottom:3px; }
+    .hp-label { font-size:11px; font-weight:800; margin-bottom:6px; text-shadow:0 2px 0 rgba(0,0,0,0.75); }
     .hp-label.left { color:#6ee7ff; }
     .hp-label.right { color:#ffb86e; }
-    .hp-track {
-      width:100%; height:16px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.15);
-      border-radius:2px; overflow:hidden;
+    .hp-panel {
+      position:relative;
+      width:100%;
+      height:78px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.55));
     }
-    .hp-fill { height:100%; transition:width 0.3s ease, background 0.3s ease; border-radius:1px; }
-    .hp-fill.left { background:#4ade80; }
-    .hp-fill.right { background:#fb923c; }
+    .hp-panel::before {
+      content:"";
+      position:absolute; inset:0;
+      background:url('/assets/ui_HP_BAR.png') no-repeat;
+      background-size:100% 100%;
+      image-rendering: pixelated;
+      opacity:0.98;
+    }
+    .hp-panel.right::before {
+      transform: scaleX(-1);
+      transform-origin:center;
+    }
+    /* Bar area inside ui_HP_BAR.png: x=192..622, y=65..117 on 677x180 */
+    .hp-fill-wrap {
+      position:absolute;
+      left:28.4%;
+      top:36.2%;
+      width:63.5%;
+      height:28.9%;
+      overflow:hidden;
+      border-radius:2px;
+    }
+    /* When the panel art is mirrored, the bar cutout moves too */
+    .hp-panel.right .hp-fill-wrap { left:8.1%; }
+    .hp-fill {
+      width:100%; height:100%;
+      transform: scaleX(1);
+      transform-origin: left center;
+      transition: transform 0.18s ease;
+      background-image:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 6px, rgba(0,0,0,0.10) 6px, rgba(0,0,0,0.10) 12px),
+        linear-gradient(90deg, rgba(74,222,128,1), rgba(34,197,94,1));
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+    }
+    .hp-panel.right .hp-fill { transform-origin: right center; }
+    .hp-num {
+      position:absolute;
+      right:14px;
+      top:10px;
+      font-size:12px;
+      font-weight:900;
+      opacity:0.88;
+      text-shadow:0 2px 0 rgba(0,0,0,0.75);
+    }
+    .hp-panel.right .hp-num { left:14px; right:auto; }
 
     /* Mana bar */
-    .mana-track {
-      width:100%; max-width:220px; height:8px; background:rgba(0,0,0,0.5);
-      border:1px solid rgba(100,100,200,0.2); border-radius:1px; overflow:hidden; margin-top:4px;
+    .mana-frame {
+      width:100%; height:18px;
+      background:url('/assets/mana-frame.png') no-repeat;
+      background-size:100% 100%;
+      padding:5px 8px;
+      margin-top:6px;
+      image-rendering: pixelated;
     }
+    .mana-track { width:100%; height:8px; background:rgba(0,0,0,0.45); border-radius:1px; overflow:hidden; }
     .mana-fill { height:100%; background:#818cf8; transition:width 0.15s ease; }
     .mana-label { font-size:10px; color:#a5b4fc; margin-top:2px; }
 
@@ -66,61 +134,138 @@
     .ready-row { display:flex; justify-content:space-between; font-size:10px; opacity:0.8; margin-top:4px; }
 
     /* Cooldown bar */
+
+    .cd-pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+    .cd-pill {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));
+      font-size:11px;
+    }
+    .cd-pill.ready { border-color: rgba(110,231,255,0.35); }
+    .cd-pill.locked { opacity:0.55; }
+    .cd-pill .k { opacity:0.75; }
+    .cd-pill .t { font-weight:700; }
+    .cd-pill .r { font-variant-numeric: tabular-nums; opacity:0.85; }
+    
     #hudCooldowns { font-size:11px; margin-top:6px; letter-spacing:0.3px; }
 
     /* Bottom bar */
     .hud-bottom {
-      position:absolute; left:12px; bottom:12px; font-size:12px; width:min(620px,92vw);
-      background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:3px;
-      border:1px solid rgba(255,255,255,0.08);
+      position:absolute; left:12px; bottom:12px;
+      width:min(860px,96vw); height:132px;
+      background:url('/assets/Spell_sub_box.png') no-repeat;
+      background-size:100% 100%;
+      padding:14px 18px 12px 170px;   /* leave space for "You said" label */
+      border:none;
+      box-shadow:0 18px 60px rgba(0,0,0,0.55);
+      image-rendering: pixelated;
     }
-    #hudSubtitle { white-space:pre-wrap; margin:4px 0 0 0; font-size:11px; opacity:0.9; }
-    .key-hints { opacity:0.5; font-size:10px; margin-top:4px; }
+    /* Keep the main line clean + "gamey" (no giant multi-line spam) */
+    #hudSubtitle {
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin:18px 0 0 0;
+      font-size:14px;
+      line-height:1.2;
+      color:#eaf6ff;
+      text-shadow:0 2px 0 rgba(0,0,0,0.8);
+      letter-spacing:0.2px;
+    }
+    .key-hints { position:absolute; right:18px; bottom:10px; opacity:0.65; font-size:10px; }
 
-    /* End overlay */
-    #endOverlay .panel { text-align:center; }
-    #endWinner { font-size:20px; font-weight:700; margin:12px 0; }
+    /* End overlay (results) */
+    #endOverlay .panel-ui { text-align:center; }
+    .result-title { font-size:14px; opacity:0.85; letter-spacing:1px; }
+    #endWinner { font-size:28px; font-weight:900; margin:10px 0 2px; text-shadow:0 3px 0 rgba(0,0,0,0.55); }
+    #endMeta { font-size:12px; opacity:0.75; margin-bottom:14px; }
+    .result-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; }
+    .result-card {
+      text-align:left;
+      padding:12px 12px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.10);
+    }
+    .result-card .name { font-weight:800; margin-bottom:6px; }
+    .stat-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; }
+    .stat-row span:first-child { opacity:0.75; }
+    .result-footer { display:flex; justify-content:center; gap:10px; margin-top:14px; }
+
+    /* How-to overlay */
+    .howto-title { font-size:18px; font-weight:900; letter-spacing:0.6px; }
+    .howto-story { margin-top:10px; font-size:13px; line-height:1.6; opacity:0.92; }
+    .howto-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    .howto-card {
+      padding:10px 12px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.10);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .howto-card b { color:#eaf6ff; }
+    .howto-footer { display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:14px; }
+    .howto-footer label { font-size:12px; opacity:0.75; display:flex; align-items:center; gap:8px; }
   </style>
 </head>
 <body>
   <div id="game"></div>
 
-  <!-- ═══ Lobby ═══ -->
+  
   <div id="lobbyOverlay" class="overlay">
-    <div class="panel">
-      <div class="panel-title">⚡ Voice‑Cast Wizard Duel</div>
-      <div class="muted">LAN 1v1. Host runs client+server. Player 2 opens the host IP in browser.</div>
-      <div class="row"><input id="nameInput" placeholder="Your name" /></div>
-      <div class="row">
-        <button id="createBtn">Create Room</button>
-        <input id="roomInput" placeholder="Room code" style="max-width:200px;" />
-        <button id="joinBtn">Join</button>
+    <div class="panel panel-ui">
+      <div class="panel-title" style="font-size:22px; font-weight:900; letter-spacing:0.6px;">â¡ Voice-Cast Wizard Duel</div>
+      <div class="muted" style="margin-top:6px;">Two apprentice wizards. One shrine. Say the spell first.</div>
+
+      <div class="row" style="margin-top:12px;">
+        <input id="nameInput" placeholder="Wizard name" />
       </div>
-      <div class="row"><input id="serverInput" placeholder="Server URL (default: auto)" /></div>
-      <div class="muted">Voice works best on <b>Chrome</b>. Fallback: keys <b>1–5</b> to cast spells.</div>
+
+      <div class="row" style="margin-top:10px;">
+        <button id="createBtn" style="min-width:140px;">Create</button>
+        <input id="roomInput" placeholder="Room code" style="max-width:220px;" />
+        <button id="joinBtn" style="min-width:120px;">Join</button>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <input id="serverInput" placeholder="Server URL (optional)" />
+      </div>
+
+      <div class="muted" style="margin-top:10px;">Tip: <b>Chrome</b> has best voice recognition. Keyboard fallback: <b>1-5</b>.</div>
       <div id="errBox" class="err"></div>
     </div>
   </div>
 
-  <!-- ═══ HUD ═══ -->
+  
   <div id="hudOverlay">
-    <!-- Top bar: room + HP -->
+    
     <div style="position:absolute; left:12px; right:12px; top:8px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
         <div style="font-size:12px; opacity:0.6;">
-          <span id="hudRoom"></span> · <span id="hudPhase"></span> · <span id="hudTimer"></span>
+          <span id="hudRoom"></span> Â· <span id="hudPhase"></span> Â· <span id="hudTimer"></span>
         </div>
       </div>
       <div class="hp-container">
         <div class="hp-block">
           <div id="hudHPLeft" class="hp-label left"></div>
-          <div class="hp-track"><div id="hudHPBarLeft" class="hp-fill left" style="width:100%"></div></div>
-          <div class="mana-track"><div id="hudManaBar" class="mana-fill" style="width:100%"></div></div>
-          <div id="hudManaText" class="mana-label">MP 100</div>
+          <div class="hp-panel">
+            <div class="hp-fill-wrap"><div id="hudHPBarLeft" class="hp-fill" style="transform:scaleX(1)"></div></div>
+            <div id="hudHPNumLeft" class="hp-num">100</div>
+          </div>
+          <div id="manaLeft" class="mana-frame"><div class="mana-track"><div id="hudManaBarLeft" class="mana-fill" style="width:100%"></div></div></div>
+          <div id="hudManaTextLeft" class="mana-label">MP 100</div>
         </div>
         <div class="hp-block right">
           <div id="hudHPRight" class="hp-label right"></div>
-          <div class="hp-track"><div id="hudHPBarRight" class="hp-fill right" style="width:100%"></div></div>
+          <div class="hp-panel right">
+            <div class="hp-fill-wrap"><div id="hudHPBarRight" class="hp-fill" style="transform:scaleX(1)"></div></div>
+            <div id="hudHPNumRight" class="hp-num">100</div>
+          </div>
+          <div id="manaRight" class="mana-frame" style="display:none;"><div class="mana-track"><div id="hudManaBarRight" class="mana-fill" style="width:100%"></div></div></div>
+          <div id="hudManaTextRight" class="mana-label" style="display:none;">MP 100</div>
         </div>
       </div>
       <div class="ready-row">
@@ -129,40 +274,104 @@
       </div>
     </div>
 
-    <!-- Bottom bar -->
+    
     <div class="hud-bottom">
-      <div id="hudMic">🎙 OFF</div>
+      <div id="hudMic">ð OFF</div>
       <div id="hudCooldowns"></div>
       <pre id="hudSubtitle"></pre>
-      <div class="key-hints">1–5=Cast | R=Ready | M=Mic | Arrows=Move | N=Rematch | B=Back</div>
+      <div id="hudSubtitle2" style="margin-top:6px; font-size:12px; opacity:0.85; color:#c7d2fe; text-shadow:0 2px 0 rgba(0,0,0,0.75);"></div>
+      <div class="key-hints">1-5=Cast | R=Ready | M=Mic | Arrows=Move | N=Rematch | B=Back</div>
     </div>
   </div>
 
-  <!-- ═══ Match End ═══ -->
-  <div id="endOverlay" class="overlay" style="display:none;">
-    <div class="panel">
-      <div class="panel-title">Match Over</div>
-      <div id="endWinner"></div>
-      <div class="row" style="justify-content:center;">
-        <button id="rematchBtn">Rematch (N)</button>
-        <button id="backBtn">Back to Lobby (B)</button>
+  
+  <div id="howtoOverlay" class="overlay" style="display:none; z-index:12;">
+    <div class="panel-ui" style="max-width:760px;">
+      <div class="howto-title">ð Prologue - The Moonlit Shrine</div>
+      <div class="howto-story">
+        Within the Moonlit Shrine’s barrier, mana answers to spoken words. Two apprentices are chosen to duel:
+        <b>speak an incantation</b>, <b>cast spells</b>, and <b>drop your opponent’s HP to 0</b>.
+      </div>
+
+      <div class="howto-grid">
+        <div class="howto-card">
+          <b>Movement</b><br/>
+          Arrow keys to move (left/right).<br/>
+          Your wizard auto-faces the direction you move.
+        </div>
+        <div class="howto-card">
+          <b>Casting</b><br/>
+          Press <b>1-3</b> to cast equipped spells.<br/>
+          Or press <b>M</b> to toggle mic, then say the incantation.
+        </div>
+        <div class="howto-card">
+          <b>Ready & Start</b><br/>
+          Press <b>R</b> when you're ready.<br/>
+          Both players ready â round begins.
+        </div>
+        <div class="howto-card">
+          <b>Mana & Cooldowns</b><br/>
+          Spells cost MP and have cooldowns.<br/>
+          After casting, MP regen pauses briefly - choose your timing.
+        </div>
+      </div>
+
+      <div class="howto-footer">
+        <label><input id="howtoDontShow" type="checkbox" /> Don't show again</label>
+        <button id="howtoOkBtn">Got it</button>
       </div>
     </div>
   </div>
 
-  <!-- ═══ Loadout ═══ -->
+  
+  <div id="endOverlay" class="overlay" style="display:none;">
+    <div class="panel-ui">
+      <div class="result-title">MATCH RESULT</div>
+      <div id="endWinner">VICTORY</div>
+      <div id="endMeta">Room -</div>
+
+      <div class="result-grid">
+        <div class="result-card" id="endCardLeft">
+          <div class="name" id="endNameLeft">-</div>
+          <div class="stat-row"><span>HP</span><span id="endHPLeft">-</span></div>
+          <div class="stat-row"><span>Damage Dealt</span><span id="endDmgLeft">-</span></div>
+          <div class="stat-row"><span>Damage Taken</span><span id="endTakenLeft">-</span></div>
+          <div class="stat-row"><span>Spells Cast</span><span id="endCastLeft">-</span></div>
+          <div class="stat-row"><span>Hits Landed</span><span id="endHitsLeft">-</span></div>
+          <div class="stat-row"><span>Healing Done</span><span id="endHealLeft">-</span></div>
+        </div>
+        <div class="result-card" id="endCardRight">
+          <div class="name" id="endNameRight">-</div>
+          <div class="stat-row"><span>HP</span><span id="endHPRight">-</span></div>
+          <div class="stat-row"><span>Damage Dealt</span><span id="endDmgRight">-</span></div>
+          <div class="stat-row"><span>Damage Taken</span><span id="endTakenRight">-</span></div>
+          <div class="stat-row"><span>Spells Cast</span><span id="endCastRight">-</span></div>
+          <div class="stat-row"><span>Hits Landed</span><span id="endHitsRight">-</span></div>
+          <div class="stat-row"><span>Healing Done</span><span id="endHealRight">-</span></div>
+        </div>
+      </div>
+
+      <div class="result-footer">
+        <button id="rematchBtn">Rematch (N)</button>
+        <button id="backBtn">Back (B)</button>
+      </div>
+    </div>
+  </div>
+
+  
   <div id="loadoutOverlay" class="overlay" style="display:none;">
-    <div class="panel" style="max-width:720px;">
+    <div class="panel panel-ui" style="max-width:760px;">
       <div class="panel-title">Choose your spells</div>
-      <div class="muted">Tip: Click ▶ to hear pronunciation. Cast with voice or number keys.</div>
+      <div class="muted">Tip: Click â¶ to hear pronunciation. Cast with voice or number keys.</div>
       <div id="loadoutRoom" class="muted" style="margin-top:10px;"></div>
-      <div id="spellList" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;"></div>
+      <div class="row" style="margin-top:12px;"><input id="spellSearch" placeholder="Search spellsâ¦" /></div>
+      <div id="spellList" style="margin-top:10px; display:flex; flex-direction:column; gap:10px; max-height:50vh; overflow-y:auto; padding-right:6px;"></div>
       <div class="row" style="align-items:center;">
         <div class="muted" id="loadoutHint">Pick exactly 3 spells.</div>
         <div style="flex:1"></div>
         <button id="loadoutContinueBtn">Continue</button>
       </div>
-      <div class="muted">After continuing: press <b>R</b> to Ready. Both players READY → match starts.</div>
+      <div class="muted">After continuing: press <b>R</b> to Ready. Both players READY â match starts.</div>
     </div>
   </div>
 
